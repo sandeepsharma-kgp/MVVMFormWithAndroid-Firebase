@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ApliAiEducation</string>
+    <string name="institutename">Institute Name</string>
+    <string name="fieldofstudy">Field of Study</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="updatedetails">UPDATE</string>
+    <string name="click_to_set_the_date">Click to set the date</string>
+</resources>

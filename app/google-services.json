@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "418168904012",
+    "firebase_url": "https://aplieducation.firebaseio.com",
+    "project_id": "aplieducation",
+    "storage_bucket": "aplieducation.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:418168904012:android:4f0d694c1f05c7fc",
+        "android_client_info": {
+          "package_name": "com.example.apliaieducation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "418168904012-h3qt5o7jafm6sim18afcu1p0ubiqmnrv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.apliaieducation",
+            "certificate_hash": "63a254dba8175d1e8808f3a3f35c0ad571a6a679"
+          }
+        },
+        {
+          "client_id": "418168904012-ho4m8s1g683kci3viq7t1hkvn2b3gcf4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkANHlC50MpR54e-sT867K2bXUooRiUsQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "418168904012-ho4m8s1g683kci3viq7t1hkvn2b3gcf4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
