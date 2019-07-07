@@ -36,13 +36,6 @@ public class EducationDetailFragment extends Fragment {
 
     private EducationViewModel viewModel;
     private EducationDetailFragmentBinding binding;
-    private String institute;
-    private String degreeType;
-    private String perType;
-    private String percentage;
-    private String fieldOfStudy;
-    private String fromDate;
-    private String toDate;
     private Context context;
     private LiveData<DataSnapshot> detail;
     private ArrayList<String> perList;
@@ -152,25 +145,7 @@ public class EducationDetailFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-
-                institute = viewModel.institute.getValue();
-                degreeType = viewModel.degreeType.getValue();
-                perType = viewModel.perType.getValue();
-                percentage = viewModel.percentage.getValue();
-                fieldOfStudy = viewModel.fieldOfStudy.getValue();
-
-
-                fromDate = viewModel.fromDate.getValue();
-                toDate = viewModel.fromDate.getValue();
-
-                if (institute.isEmpty() || perType.isEmpty() || percentage.isEmpty() || fieldOfStudy.isEmpty()
-                        || fromDate.isEmpty() || toDate.isEmpty()) {
-
-                    Toast.makeText(context, "PLEASE FILL ALL CEREDENTIALS", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    updateDetails();
-                }
+                updateDetails();
             }
         });
 
@@ -178,13 +153,13 @@ public class EducationDetailFragment extends Fragment {
 
     private void updateDetails() {
         EducationDetails educationDetails = new EducationDetails();
-        educationDetails.setDegreeType(degreeType);
-        educationDetails.setInstituteName(institute);
-        educationDetails.setFieldOfStudy(fieldOfStudy);
-        educationDetails.setFromDate(fromDate);
-        educationDetails.setToDate(toDate);
-        educationDetails.setPercentage(percentage);
-        educationDetails.setPerType(perType);
+        educationDetails.setDegreeType(viewModel.degreeType.getValue());
+        educationDetails.setInstituteName(viewModel.institute.getValue());
+        educationDetails.setFieldOfStudy(viewModel.fieldOfStudy.getValue());
+        educationDetails.setFromDate(viewModel.fromDate.getValue());
+        educationDetails.setToDate(viewModel.toDate.getValue());
+        educationDetails.setPercentage(viewModel.percentage.getValue());
+        educationDetails.setPerType(viewModel.perType.getValue());
         viewModel.save(educationDetails);
         Toast.makeText(context, "DETAILS UPDATED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
     }
