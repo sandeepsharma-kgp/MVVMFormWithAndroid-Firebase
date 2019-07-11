@@ -7,10 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,26 +37,20 @@ public class EducationDetailFragment extends Fragment {
     private Context context;
     private LiveData<DataSnapshot> detail;
     private ArrayList<String> perList;
-    private ArrayList<String> educationList;
-    private Spinner perTypeSpinner;
-    private Spinner degreeSpinner;
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(EducationViewModel.class);
-        viewModel.init(context);
         detail = viewModel.getDetails();
         detail.observe(this, new Observer<DataSnapshot>() {
             @Override
             public void onChanged(DataSnapshot dataSnapshot) {
-                if(dataSnapshot != null) {
+                if (dataSnapshot != null) {
                     EducationDetails educationDetails = dataSnapshot.child(FirebaseAuth.getInstance().getUid()).getValue(EducationDetails.class);
-                    viewModel.degreeType.setValue(educationDetails.getDegreeType());
-                    degreeSpinner.setSelection(Integer.parseInt(viewModel.degreeType.getValue()));
+                    binding.degreeTypeSpinner.setSelection(Integer.parseInt(viewModel.degreeType.getValue()));
                     viewModel.institute.setValue(educationDetails.getInstituteName());
-                    viewModel.perType.setValue(educationDetails.getPerType());
-                    perTypeSpinner.setSelection(Integer.parseInt(viewModel.perType.getValue()));
+                    binding.perTypeSpinner.setSelection(Integer.parseInt(viewModel.perType.getValue()));
                     viewModel.percentage.setValue(educationDetails.getPercentage());
                     viewModel.fieldOfStudy.setValue(educationDetails.getFieldOfStudy());
                     viewModel.fromDate.setValue(educationDetails.getFromDate());
@@ -74,6 +66,8 @@ public class EducationDetailFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+        viewModel = ViewModelProviders.of(this).get(EducationViewModel.class);
+        viewModel.init(context);
     }
 
     @Nullable
@@ -90,23 +84,12 @@ public class EducationDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         showDatePickerDialog();
 
-        perList = new ArrayList<String>();
-        perList.add("PERCENTAGE");
-        perList.add("CGPA");
-        perList.add("SGPA");
-
-        perTypeSpinner = view.findViewById(R.id.perTypeSpinner);
-        final ArrayAdapter<String> perTypeAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, perList);
-        perTypeSpinner.setAdapter(perTypeAdapter);
-
-
-        perTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.perTypeSpinner.setAdapter(viewModel.getPerTypeAdapter);
+        binding.perTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
                 viewModel.perType.postValue(Integer.toString(i));
-
             }
 
             @Override
@@ -115,18 +98,9 @@ public class EducationDetailFragment extends Fragment {
             }
         });
 
-        educationList = new ArrayList<>();
-        educationList.add("SECONDARY EDUCATION");
-        educationList.add("SENIOR SECONDARY");
-        educationList.add("BACHELORS");
-        educationList.add("MASTERS");
-        educationList.add("DOCTORATE");
+        binding.degreeTypeSpinner.setAdapter(viewModel.getDegreeAdapter);
 
-        degreeSpinner = view.findViewById(R.id.degreeTypeSpinner);
-        ArrayAdapter<String> degreeAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, educationList);
-        degreeSpinner.setAdapter(degreeAdapter);
-
-        degreeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.degreeTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -138,10 +112,7 @@ public class EducationDetailFragment extends Fragment {
 
             }
         });
-
-        updateDetailsButton = view.findViewById(R.id.updateDetails_button);
-
-        updateDetailsButton.setOnClickListener(new View.OnClickListener() {
+        binding.updateDetailsButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -152,15 +123,7 @@ public class EducationDetailFragment extends Fragment {
     }
 
     private void updateDetails() {
-        EducationDetails educationDetails = new EducationDetails();
-        educationDetails.setDegreeType(viewModel.degreeType.getValue());
-        educationDetails.setInstituteName(viewModel.institute.getValue());
-        educationDetails.setFieldOfStudy(viewModel.fieldOfStudy.getValue());
-        educationDetails.setFromDate(viewModel.fromDate.getValue());
-        educationDetails.setToDate(viewModel.toDate.getValue());
-        educationDetails.setPercentage(viewModel.percentage.getValue());
-        educationDetails.setPerType(viewModel.perType.getValue());
-        viewModel.save(educationDetails);
+        viewModel.save();
         Toast.makeText(context, "DETAILS UPDATED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
     }
 
