@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,32 +23,29 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 
 import java.text.DateFormatSymbols;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
 public class EducationDetailFragment extends Fragment {
-    private Button updateDetailsButton;
 
     private EducationViewModel viewModel;
     private EducationDetailFragmentBinding binding;
     private Context context;
     private LiveData<DataSnapshot> detail;
-    private ArrayList<String> perList;
 
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         detail = viewModel.getDetails();
-        detail.observe(this, new Observer<DataSnapshot>() {
+        detail.observe(getViewLifecycleOwner(), new Observer<DataSnapshot>() {
             @Override
             public void onChanged(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null) {
                     EducationDetails educationDetails = dataSnapshot.child(FirebaseAuth.getInstance().getUid()).getValue(EducationDetails.class);
-                    binding.degreeTypeSpinner.setSelection(Integer.parseInt(viewModel.degreeType.getValue()));
                     viewModel.institute.setValue(educationDetails.getInstituteName());
-                    binding.perTypeSpinner.setSelection(Integer.parseInt(viewModel.perType.getValue()));
+                    binding.degreeTypeSpinner.setSelection(Integer.parseInt(educationDetails.getDegreeType()));
+                    binding.perTypeSpinner.setSelection(Integer.parseInt(educationDetails.getPerType()));
                     viewModel.percentage.setValue(educationDetails.getPercentage());
                     viewModel.fieldOfStudy.setValue(educationDetails.getFieldOfStudy());
                     viewModel.fromDate.setValue(educationDetails.getFromDate());
@@ -85,33 +80,9 @@ public class EducationDetailFragment extends Fragment {
         showDatePickerDialog();
 
         binding.perTypeSpinner.setAdapter(viewModel.getPerTypeAdapter);
-        binding.perTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                viewModel.perType.postValue(Integer.toString(i));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
         binding.degreeTypeSpinner.setAdapter(viewModel.getDegreeAdapter);
 
-        binding.degreeTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                viewModel.degreeType.setValue(Integer.toString(i));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
         binding.updateDetailsButton.setOnClickListener(new View.OnClickListener() {
 
             @Override

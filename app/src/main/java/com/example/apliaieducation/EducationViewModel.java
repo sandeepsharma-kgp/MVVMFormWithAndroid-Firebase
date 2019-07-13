@@ -17,18 +17,19 @@ public class EducationViewModel extends ViewModel {
     public EducationRepository educationRepository;
     public MutableLiveData<String> institute = new MutableLiveData<>();
     public MutableLiveData<String> degreeType = new MutableLiveData<>();
+    public MutableLiveData<Integer> degreeTypePostion = new MutableLiveData<>();
     public MutableLiveData<String> perType = new MutableLiveData<>();
+    public MutableLiveData<Integer> perTypePostion = new MutableLiveData<>();
     public MutableLiveData<String> percentage = new MutableLiveData<>();
     public MutableLiveData<String> fieldOfStudy = new MutableLiveData<>();
     public MutableLiveData<String> fromDate = new MutableLiveData<>();
     public MutableLiveData<String> toDate = new MutableLiveData<>();
     public SpinnerAdapter getDegreeAdapter;
     public SpinnerAdapter getPerTypeAdapter;
-    private Context context;
     public ArrayList<String> educationList, perList;
+    private Context context;
 
-
-    public void init(Context context){
+    public void init(Context context) {
         this.context = context;
         educationRepository = new EducationRepository(context);
         educationList = new ArrayList<>();
@@ -38,7 +39,6 @@ public class EducationViewModel extends ViewModel {
         educationList.add("MASTERS");
         educationList.add("DOCTORATE");
         getDegreeAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, educationList);
-
         perList = new ArrayList<String>();
         perList.add("PERCENTAGE");
         perList.add("CGPA");
@@ -47,19 +47,20 @@ public class EducationViewModel extends ViewModel {
         getPerTypeAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, perList);
 
     }
-    public void save(){
+
+    public void save() {
         EducationDetails educationDetails = new EducationDetails();
-        educationDetails.setDegreeType(degreeType.getValue());
+        educationDetails.setDegreeType(degreeTypePostion.getValue().toString());
         educationDetails.setInstituteName(institute.getValue());
         educationDetails.setFieldOfStudy(fieldOfStudy.getValue());
         educationDetails.setFromDate(fromDate.getValue());
         educationDetails.setToDate(toDate.getValue());
         educationDetails.setPercentage(percentage.getValue());
-        educationDetails.setPerType(perType.getValue());
+        educationDetails.setPerType(perTypePostion.getValue().toString());
         educationRepository.save(educationDetails);
     }
 
-    public LiveData<DataSnapshot> getDetails(){
+    public LiveData<DataSnapshot> getDetails() {
         return educationRepository.getData();
     }
 }
