@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
@@ -30,7 +31,6 @@ public class EducationViewModel extends ViewModel {
     private Context context;
 
     public void init(Context context) {
-        this.context = context;
         educationRepository = new EducationRepository(context);
         educationList = new ArrayList<>();
         educationList.add("SECONDARY EDUCATION");
@@ -62,5 +62,19 @@ public class EducationViewModel extends ViewModel {
 
     public LiveData<DataSnapshot> getDetails() {
         return educationRepository.getData();
+    }
+
+    public void update(DataSnapshot dataSnapshot) {
+        if (dataSnapshot != null) {
+            EducationDetails educationDetails = dataSnapshot.child(FirebaseAuth.getInstance().getUid()).getValue(EducationDetails.class);
+            institute.setValue(educationDetails.getInstituteName());
+            degreeTypePostion.setValue(Integer.parseInt(educationDetails.getPerType()));
+            perTypePostion.setValue(Integer.parseInt(educationDetails.getPerType()));
+            percentage.setValue(educationDetails.getPercentage());
+            fieldOfStudy.setValue(educationDetails.getFieldOfStudy());
+            fromDate.setValue(educationDetails.getFromDate());
+            toDate.setValue(educationDetails.getToDate());
+        }
+
     }
 }

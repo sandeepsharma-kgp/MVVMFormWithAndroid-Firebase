@@ -19,7 +19,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.apliaieducation.databinding.EducationDetailFragmentBinding;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 
 import java.text.DateFormatSymbols;
@@ -41,16 +40,7 @@ public class EducationDetailFragment extends Fragment {
         detail.observe(getViewLifecycleOwner(), new Observer<DataSnapshot>() {
             @Override
             public void onChanged(DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null) {
-                    EducationDetails educationDetails = dataSnapshot.child(FirebaseAuth.getInstance().getUid()).getValue(EducationDetails.class);
-                    viewModel.institute.setValue(educationDetails.getInstituteName());
-                    binding.degreeTypeSpinner.setSelection(Integer.parseInt(educationDetails.getDegreeType()));
-                    binding.perTypeSpinner.setSelection(Integer.parseInt(educationDetails.getPerType()));
-                    viewModel.percentage.setValue(educationDetails.getPercentage());
-                    viewModel.fieldOfStudy.setValue(educationDetails.getFieldOfStudy());
-                    viewModel.fromDate.setValue(educationDetails.getFromDate());
-                    viewModel.toDate.setValue(educationDetails.getToDate());
-                }
+                viewModel.update(dataSnapshot);
             }
         });
 
@@ -138,4 +128,9 @@ public class EducationDetailFragment extends Fragment {
         toDatePickerView.setOnClickListener(clickListener);
     }
 
+    @Override
+    public void onDestroy() {
+        detail.removeObservers(this);
+        super.onDestroy();
+    }
 }
